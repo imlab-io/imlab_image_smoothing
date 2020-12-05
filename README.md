@@ -14,155 +14,85 @@ thumbnail: /assets/post_resources/image_smoothing/thumbnail.png
 
 <!--more-->
 
-Önerilen yöntemin literatürdeki diğer yöntemlerden en önemli farkı; renk yumuşatma işlemini görüntüdeki renk geçilerini sınırlandıracak bir optimizasyon problemi olarak ifade etmesidir. Görüntüdeki her bir renk geçişinin küçük veya büyük bir gradyan yaratacağından önerilen yöntemin temel hedefi görüntüdeki gradyanların sayısının belirli bir limit altında tutulmasıdır. Matematiksel olarak bir değişkenin sayısı $L_0$ norm ile belirlendiğinden, yöntem görüntüdeki gradyanların sayısı $C(S) = \lVert (\partial_x S)^2 + (\partial_y S)^2 \lVert_0$ fonksiyonunu en küçükleyecek $S$ görüntüsünü bulmayı hedeflemektedir. Optimizasyon sonrası bulunacak yumuşatılmış imge $S$ nin, girdi imgesi $I$ ile de benzer olması gerektiğinden incelenen çalışmanın ele aldığı optimizasyon fonksiyonu [Lagrange Çarpanları]({% post_url 2020-01-13-lagrange-carpanlari-yontemi %}) kullanılarak şu şekilde yazılabilir.
+Önerilen yöntemin literatürdeki diğer yöntemlerden en önemli farkı; renk yumuşatma işlemini görüntüdeki renk geçilerini sınırlandıracak bir optimizasyon problemi olarak ifade etmesidir. Görüntüdeki her bir renk geçişinin küçük veya büyük bir gradyan yaratacağından önerilen yöntemin temel hedefi görüntüdeki gradyanların sayısının belirli bir limit altında tutulmasıdır. Matematiksel olarak bir değişkenin sayısı <img src="assets/post_resources/math//cc96eb8a40f81e8514147d06c9e8ad92.svg?invert_in_darkmode" align=middle width=17.73978854999999pt height=22.465723500000017pt/> norm ile belirlendiğinden, yöntem görüntüdeki gradyanların sayısı <img src="assets/post_resources/math//f459a1566f763c39ffc253c77ff9157c.svg?invert_in_darkmode" align=middle width=197.74393485pt height=26.76175259999998pt/> fonksiyonunu en küçükleyecek <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> görüntüsünü bulmayı hedeflemektedir. Optimizasyon sonrası bulunacak yumuşatılmış imge <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> nin, girdi imgesi <img src="assets/post_resources/math//21fd4e8eecd6bdf1a4d3d6bd1fb8d733.svg?invert_in_darkmode" align=middle width=8.515988249999989pt height=22.465723500000017pt/> ile de benzer olması gerektiğinden incelenen çalışmanın ele aldığı optimizasyon fonksiyonu [Lagrange Çarpanları]({% post_url 2020-01-13-lagrange-carpanlari-yontemi %}) kullanılarak şu şekilde yazılabilir.
 
-$$
-E(S) = \lVert S - I \lVert^2 + \lambda C(S)
-\tag{1}
-\label{objective}
-$$
+<p align="center"><img src="assets/post_resources/math//410cb700400a044a4bde29d40fd486fc.svg?invert_in_darkmode" align=middle width=181.37201115pt height=18.312383099999998pt/></p>
 
-Denklem \ref{objective} de tanımlanan ifadede ilk kısım çıktı imgesi $S$ nin $I$ ile benzerliğini kontrol ederken, ikinci kısım ise çıktı imgesindeki gradyanların sayısını kontrol altında tutmaktadır. Yapılacak fonksiyonun amacı $E(S)$ ile verilen fonksiyonun $S$ üzerinden en küçükleyen $S^\ast$ imgesini bulmaktadır.
+Denklem \ref{objective} de tanımlanan ifadede ilk kısım çıktı imgesi <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> nin <img src="assets/post_resources/math//21fd4e8eecd6bdf1a4d3d6bd1fb8d733.svg?invert_in_darkmode" align=middle width=8.515988249999989pt height=22.465723500000017pt/> ile benzerliğini kontrol ederken, ikinci kısım ise çıktı imgesindeki gradyanların sayısını kontrol altında tutmaktadır. Yapılacak fonksiyonun amacı <img src="assets/post_resources/math//2e53563baea25d6c9cc9187eea827cb7.svg?invert_in_darkmode" align=middle width=36.89499329999999pt height=24.65753399999998pt/> ile verilen fonksiyonun <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> üzerinden en küçükleyen <img src="assets/post_resources/math//28af5deac555c4f901297330323561ff.svg?invert_in_darkmode" align=middle width=17.76257669999999pt height=22.63846199999998pt/> imgesini bulmaktadır.
 
-Yazılan optimizasyon fonksiyonu oldukça basit görünse de $C(S)$ fonksiyonunun yapısı nedeniyle [Gradyan İniş Yöntemleri]({% post_url 2020-04-08-gradyan-yontemleri-ile-optimizasyon %}) veya diğer gradyan temelli optimizasyon yöntemleri ile doğrudan çözülebilir bir biçimde değildir. Bu nedenle yazarlar 2008 yılında "A new  alternating minimization algorithm for total variation image reconstruction" makalesinde önerilen dönüşümlü optimizasyon stratejisini Denklem \ref{objective} ile verilen probleme uygulayarak sonuca ulşmaya çalışmışlardır. Kullanılan dönüşümlü optimizasyon stratejisinin en önemli özelliği Denklem \ref{objective} ile verilen optimizasyon problemini yardımcı bir alt problem tanımlayarak çözmeye çalışmasıdır. 
+Yazılan optimizasyon fonksiyonu oldukça basit görünse de <img src="assets/post_resources/math//336c899d149fd070aa2cd97955a0ce8c.svg?invert_in_darkmode" align=middle width=36.73745294999999pt height=24.65753399999998pt/> fonksiyonunun yapısı nedeniyle [Gradyan İniş Yöntemleri]({% post_url 2020-04-08-gradyan-yontemleri-ile-optimizasyon %}) veya diğer gradyan temelli optimizasyon yöntemleri ile doğrudan çözülebilir bir biçimde değildir. Bu nedenle yazarlar 2008 yılında "A new  alternating minimization algorithm for total variation image reconstruction" makalesinde önerilen dönüşümlü optimizasyon stratejisini Denklem \ref{objective} ile verilen probleme uygulayarak sonuca ulşmaya çalışmışlardır. Kullanılan dönüşümlü optimizasyon stratejisinin en önemli özelliği Denklem \ref{objective} ile verilen optimizasyon problemini yardımcı bir alt problem tanımlayarak çözmeye çalışmasıdır. 
 
-Tanımlanan problem $C(S)$ fonksiyonunu $S$ değişkeni yerine sabit kabul edilecek bir yardımcı değişkene bağlı yeniden yazabilmeyi hedeflemektedir. $C(S)$ in, $S$ değişkenine bağlı olmadan yeniden yazılması durumunda Denklem \ref{objective} ifadesi dışbükey olacağından basit bir çözüme sahip olacaktır.
+Tanımlanan problem <img src="assets/post_resources/math//336c899d149fd070aa2cd97955a0ce8c.svg?invert_in_darkmode" align=middle width=36.73745294999999pt height=24.65753399999998pt/> fonksiyonunu <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> değişkeni yerine sabit kabul edilecek bir yardımcı değişkene bağlı yeniden yazabilmeyi hedeflemektedir. <img src="assets/post_resources/math//336c899d149fd070aa2cd97955a0ce8c.svg?invert_in_darkmode" align=middle width=36.73745294999999pt height=24.65753399999998pt/> in, <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> değişkenine bağlı olmadan yeniden yazılması durumunda Denklem \ref{objective} ifadesi dışbükey olacağından basit bir çözüme sahip olacaktır.
 
-Dönüşümlü optimizasyon stratejisini kullanabilmek için $h=\nabla_x S$ ve $v=\nabla_y S$ tanımlamalarını yaparak Denklem \ref{objective} ile verilen optimizasyon problemini yeniden yazalım.
+Dönüşümlü optimizasyon stratejisini kullanabilmek için <img src="assets/post_resources/math//bed790214a5f33f0ab2a43655a9e597c.svg?invert_in_darkmode" align=middle width=64.39108499999999pt height=22.831056599999986pt/> ve <img src="assets/post_resources/math//48f86894512114c289174babb4451644.svg?invert_in_darkmode" align=middle width=63.10304879999999pt height=22.465723500000017pt/> tanımlamalarını yaparak Denklem \ref{objective} ile verilen optimizasyon problemini yeniden yazalım.
 
-$$
-\begin{aligned}
-S^\ast &= \arg \min_{S,h,v} \; E(S,h,v)\\
-E(S,h,v) &= \lVert S - I \lVert^2 + \lambda C(h,v) +  \beta \left( \lVert \nabla_x S - h \lVert^2 + \lVert \nabla_y S - v \lVert^2 \right)
-\end{aligned}
-\tag{2}
-\label{objective_aux}
-$$
+<p align="center"><img src="assets/post_resources/math//c28c001d91cd3563c527cf2489b0dadd.svg?invert_in_darkmode" align=middle width=459.72422924999995pt height=53.472246299999995pt/></p>
 
-Yazılan ifadede $C(h,v) = \lVert h^2 + v^2 \lVert_0$ gradyan sayma fonksiyonunu göstermektedir ve $\beta$ kullanılan yardımcı değişkenlerin orjinal değişkenlere yakın olmasını zorlamaktadır. Denklem \ref{objective_aux} incelendiğinde $\beta$ katsayısının çok büyük seçilmesi durumunda $h=\nabla_x S$ ve $v=\nabla_y S$ şartı sağlanacak ve Denklem \ref{objective} ile verilen orjinal probleme yakınsayacaktır. 
+Yazılan ifadede <img src="assets/post_resources/math//8e86778d0af38680331f62765b992588.svg?invert_in_darkmode" align=middle width=148.82257335pt height=26.76175259999998pt/> gradyan sayma fonksiyonunu göstermektedir ve <img src="assets/post_resources/math//8217ed3c32a785f0b5aad4055f432ad8.svg?invert_in_darkmode" align=middle width=10.16555099999999pt height=22.831056599999986pt/> kullanılan yardımcı değişkenlerin orjinal değişkenlere yakın olmasını zorlamaktadır. Denklem \ref{objective_aux} incelendiğinde <img src="assets/post_resources/math//8217ed3c32a785f0b5aad4055f432ad8.svg?invert_in_darkmode" align=middle width=10.16555099999999pt height=22.831056599999986pt/> katsayısının çok büyük seçilmesi durumunda <img src="assets/post_resources/math//bed790214a5f33f0ab2a43655a9e597c.svg?invert_in_darkmode" align=middle width=64.39108499999999pt height=22.831056599999986pt/> ve <img src="assets/post_resources/math//48f86894512114c289174babb4451644.svg?invert_in_darkmode" align=middle width=63.10304879999999pt height=22.465723500000017pt/> şartı sağlanacak ve Denklem \ref{objective} ile verilen orjinal probleme yakınsayacaktır. 
 
-Denklem \ref{objective_aux} ile yazılan optimizasyon probleminin Denklem \ref{objective} den en önemli farkı, $C$ fonskiyonunu $S$ değişkeninden bağımsız bir şekilde yeniden yazması ve $S$ üzerinden optimizizasyonu oldukça kolaylaştırmasıdır. Ancak bunu yaparken denkleme eklediği iki yeni değişken $(h,v)$ üzerinden de yeni bir optimizasyon problemi ortaya çıkmaktadır. Denklem \ref{objective_aux} ile verilen problemin çözümü için $(h,v)$ üzerinden optimizasyon problemiyle $S$ üzerinden optimizasyon problemi dönüşümlü olarak çözülmelidir.
+Denklem \ref{objective_aux} ile yazılan optimizasyon probleminin Denklem \ref{objective} den en önemli farkı, <img src="assets/post_resources/math//9b325b9e31e85137d1de765f43c0f8bc.svg?invert_in_darkmode" align=middle width=12.92464304999999pt height=22.465723500000017pt/> fonskiyonunu <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> değişkeninden bağımsız bir şekilde yeniden yazması ve <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> üzerinden optimizizasyonu oldukça kolaylaştırmasıdır. Ancak bunu yaparken denkleme eklediği iki yeni değişken <img src="assets/post_resources/math//53783ea3d8fe6048365ee545ebc7bc29.svg?invert_in_darkmode" align=middle width=38.12027339999999pt height=24.65753399999998pt/> üzerinden de yeni bir optimizasyon problemi ortaya çıkmaktadır. Denklem \ref{objective_aux} ile verilen problemin çözümü için <img src="assets/post_resources/math//53783ea3d8fe6048365ee545ebc7bc29.svg?invert_in_darkmode" align=middle width=38.12027339999999pt height=24.65753399999998pt/> üzerinden optimizasyon problemiyle <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> üzerinden optimizasyon problemi dönüşümlü olarak çözülmelidir.
 
-### Alt Problem 1: $h,v$ bilinmesi durumunda $S^\ast$
+### Alt Problem 1: <img src="assets/post_resources/math//c2ffb8df8b47585009c24c1e7075423c.svg?invert_in_darkmode" align=middle width=25.33485899999999pt height=22.831056599999986pt/> bilinmesi durumunda <img src="assets/post_resources/math//28af5deac555c4f901297330323561ff.svg?invert_in_darkmode" align=middle width=17.76257669999999pt height=22.63846199999998pt/>
 
-Denklem \ref{objective_aux} ile verilen $E(S,h,v)$ ifadesinin $S$ e bağlı en küçük değeri, $S$ değişkenine göre türev alınarak bulunabilir. Bu ifadede $h,v$ değerleri $S$ değerine bağlı olmadığından türev işlemi sırasında skalar olarak ele alınacağından, aşağıdaki çözüm elde edilir.
+Denklem \ref{objective_aux} ile verilen <img src="assets/post_resources/math//10c7d9006a8c9af86f800f03f6e19db7.svg?invert_in_darkmode" align=middle width=68.62247039999998pt height=24.65753399999998pt/> ifadesinin <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> e bağlı en küçük değeri, <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> değişkenine göre türev alınarak bulunabilir. Bu ifadede <img src="assets/post_resources/math//c2ffb8df8b47585009c24c1e7075423c.svg?invert_in_darkmode" align=middle width=25.33485899999999pt height=22.831056599999986pt/> değerleri <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> değerine bağlı olmadığından türev işlemi sırasında skalar olarak ele alınacağından, aşağıdaki çözüm elde edilir.
 
-$$
-\begin{aligned}
-\frac{\partial E(S,h,v)}{\partial S} &= 2(S - I) + 2 \beta \left( \nabla^\intercal_x(\nabla_x S - h) + \nabla^\intercal_y(\nabla_y S - v) \right) = 0\\
-\Rightarrow & I + \beta \left( \nabla^\intercal_x h + \nabla^\intercal_y v \right) = S + \beta \left( \nabla^2_x S + \nabla^2_y S \right)\\
-\Rightarrow & I + \beta \left( \nabla^\intercal_x h + \nabla^\intercal_y v \right) = S \left(1 + \beta \left( \nabla^2_x + \nabla^2_y \right) \right)\\
-\Rightarrow & B = S \left(1 + \beta \Delta \right)
-\end{aligned}
-$$
+<p align="center"><img src="assets/post_resources/math//439d77896caab56da9612d11ab171acd.svg?invert_in_darkmode" align=middle width=462.65483879999994pt height=113.3772255pt/></p>
 
-Elde edilen ifadede sol tarafta $B=I + \beta \left( \nabla^\intercal_x h + \nabla^\intercal_y v \right)$ ile gösterilen değişkende bilinen değerler toplanmış, sağ tarafta ise bilinmeyen $S$ değeri bırakılmıştır. Denklemin sağında yer alan $\Delta = \nabla^2_x + \nabla^2_y$ ifadesi Laplace operatörüdür ve [Poisson Denklemi Yardımıyla Görüntü Düzenleme]({% post_url 2020-09-20-poisson-denklemi-yardimiyla-goruntu-duzenleme %}) yazımızda da değindiğimiz üzere iki boyutlu imgeler için 
+Elde edilen ifadede sol tarafta <img src="assets/post_resources/math//988378a8ce95aaed89cac793b8834df2.svg?invert_in_darkmode" align=middle width=173.85057195pt height=27.94539330000001pt/> ile gösterilen değişkende bilinen değerler toplanmış, sağ tarafta ise bilinmeyen <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> değeri bırakılmıştır. Denklemin sağında yer alan <img src="assets/post_resources/math//f2490a25232d9e99105da17463d89adb.svg?invert_in_darkmode" align=middle width=98.46071069999999pt height=26.76175259999998pt/> ifadesi Laplace operatörüdür ve [Poisson Denklemi Yardımıyla Görüntü Düzenleme]({% post_url 2020-09-20-poisson-denklemi-yardimiyla-goruntu-duzenleme %}) yazımızda da değindiğimiz üzere iki boyutlu imgeler için 
 
-$$\nabla^2_x + \nabla^2_y = \begin{bmatrix}\phantom{+}0 & -1 & \phantom{+}0\\-1 &\phantom{+}4 & -1\\\phantom{+}0 & -1 & \phantom{+}0\end{bmatrix}$$ 
+<p align="center"><img src="assets/post_resources/math//0e3dcb5593b6571bd3dc9ef33f17b4ce.svg?invert_in_darkmode" align=middle width=203.39241614999997pt height=59.1786591pt/></p> 
 
-çekirdeği ile evrişim işlemi sonucunda hesaplanır. Benzer şekilde $\nabla_x = \begin{bmatrix}-1 & 1\end{bmatrix}$ ve $\nabla_y = \begin{bmatrix}-1 && 1\end{bmatrix}^\intercal$ ifadeleri de yönlü gradyan operatörünü göstermektedir. 
+çekirdeği ile evrişim işlemi sonucunda hesaplanır. Benzer şekilde <img src="assets/post_resources/math//4cae83aa5da0ef99b99d5e8756590613.svg?invert_in_darkmode" align=middle width=103.25345909999997pt height=27.94539330000001pt/> ve <img src="assets/post_resources/math//e08259f46eb5493d351eb270483295ec.svg?invert_in_darkmode" align=middle width=126.76000755pt height=29.726251500000007pt/> ifadeleri de yönlü gradyan operatörünü göstermektedir. 
 
 [Poisson Denklemi Yardımıyla Görüntü Düzenleme]({% post_url 2020-09-20-poisson-denklemi-yardimiyla-goruntu-duzenleme %}) yazımızda yaptığımız şekilde bu denklemleri bir matris içerisinde yazmak istersek aşağıdaki matris ifadesi elde edilir.
 
-$$
-\begin{bmatrix}
-\dots \\ \dots \\ \dots \\
-\hline
-\dots \\ B(x,y) \\ \dots \\ 
-\hline
-\dots \\ \dots \\ \dots
-\end{bmatrix}=
-\underbrace{
-\begin{bmatrix}
-&&&&\dots\\
-&&&&\dots\\
-&&&&\dots\\
-\hline
-&&&&\dots\\
-0 \dots 0 & -\beta & 0 \dots 0 & -\beta & 1 + 4\beta & -\beta & 0 \dots 0 & -\beta & 0 \dots 0\\
-&&&&\dots\\
-\hline
-&&&&\dots \\
-&&&&\dots \\
-&&&&\dots \\
-\end{bmatrix}
-}_{\mathbf{P}}
-\begin{bmatrix}
-\dots \\ S(x,y-1) \\ \dots\\
-\hline
-S(x-1,y) \\ S(x,y) \\ S(x+1,y)\\ 
-\hline
-\dots \\S(x,y+1) \\ \dots
-\end{bmatrix}
-\tag{3}
-\label{s_solution}
-$$
+<p align="center"><img src="assets/post_resources/math//507e9c94a8c54feb697d13ba00607735.svg?invert_in_darkmode" align=middle width=653.70158205pt height=200.6629185pt/></p>
 
-Elde edilen $B=PS$ ifadesinde $P$ Poisson matrisi olarak bilinmektedir. Denklem doğrusal bir denklem takımı olduğundan imgedeki tüm pikseller için $B=PS$ denklemleri yazılarak $S^\ast=B^{-1} P$ işlemi ile $S^\ast$ imgesi çözülebilir. $P$ matrisinin oldukça seyrek bir matris olması özelliği göz önüne alındığında işlemler  [Successive Over-Relaxation]({% post_url 2020-09-20-poisson-denklemi-yardimiyla-goruntu-duzenleme %}) yöntemi kullanılarak oldukça hızlı bir şekilde çözülebilir.
+Elde edilen <img src="assets/post_resources/math//9b617d36b8d44a8b28298dffe6c9749b.svg?invert_in_darkmode" align=middle width=59.07520739999999pt height=22.465723500000017pt/> ifadesinde <img src="assets/post_resources/math//df5a289587a2f0247a5b97c1e8ac58ca.svg?invert_in_darkmode" align=middle width=12.83677559999999pt height=22.465723500000017pt/> Poisson matrisi olarak bilinmektedir. Denklem doğrusal bir denklem takımı olduğundan imgedeki tüm pikseller için <img src="assets/post_resources/math//9b617d36b8d44a8b28298dffe6c9749b.svg?invert_in_darkmode" align=middle width=59.07520739999999pt height=22.465723500000017pt/> denklemleri yazılarak <img src="assets/post_resources/math//5f1e19d5a1360b11572a102c151db349.svg?invert_in_darkmode" align=middle width=84.28073774999999pt height=26.76175259999998pt/> işlemi ile <img src="assets/post_resources/math//28af5deac555c4f901297330323561ff.svg?invert_in_darkmode" align=middle width=17.76257669999999pt height=22.63846199999998pt/> imgesi çözülebilir. <img src="assets/post_resources/math//df5a289587a2f0247a5b97c1e8ac58ca.svg?invert_in_darkmode" align=middle width=12.83677559999999pt height=22.465723500000017pt/> matrisinin oldukça seyrek bir matris olması özelliği göz önüne alındığında işlemler  [Successive Over-Relaxation]({% post_url 2020-09-20-poisson-denklemi-yardimiyla-goruntu-duzenleme %}) yöntemi kullanılarak oldukça hızlı bir şekilde çözülebilir.
 
 
-### Alt Problem 2: $S^\ast$ bilinmesi durumunda $h,v$
+### Alt Problem 2: <img src="assets/post_resources/math//28af5deac555c4f901297330323561ff.svg?invert_in_darkmode" align=middle width=17.76257669999999pt height=22.63846199999998pt/> bilinmesi durumunda <img src="assets/post_resources/math//c2ffb8df8b47585009c24c1e7075423c.svg?invert_in_darkmode" align=middle width=25.33485899999999pt height=22.831056599999986pt/>
 
-Yazımızın ilk kısmında da değindiğimiz üzere Denklem \ref{objective_aux} ile yazılan problem $S$ üzerinden en küçükleme işlemini oldukça kolaylaştırmaktadır. Ancak $S^\ast$ sabit kabul edilmesi durumunda yazılacak olan
+Yazımızın ilk kısmında da değindiğimiz üzere Denklem \ref{objective_aux} ile yazılan problem <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> üzerinden en küçükleme işlemini oldukça kolaylaştırmaktadır. Ancak <img src="assets/post_resources/math//28af5deac555c4f901297330323561ff.svg?invert_in_darkmode" align=middle width=17.76257669999999pt height=22.63846199999998pt/> sabit kabul edilmesi durumunda yazılacak olan
 
-$$
-E(S^\ast,h,v) = \lambda C(h,v) + \beta \left( \lVert \nabla_x S - h \lVert^2 + \lVert \nabla_y S - v \lVert^2 \right)
-$$
+<p align="center"><img src="assets/post_resources/math//165b82e106ba711dd796145a512d91c7.svg?invert_in_darkmode" align=middle width=391.96179659999996pt height=19.9563243pt/></p>
 
-ifadesinin çözümü dış bükey veya türevlenebilir olmadığından problemin nümerik olarak çözülmesi hala problemlidir. Ancak basit bir akıl yürütme yapılarak $E(S^\ast,h,v)$ ifadesini en küçükleyen $h,v$ değerleri bulunabilir. Bunun için öncelikle matris formunda verilen ifadeyi $p=(x,y)$ gibi seçilen herhangi bir piksel için yazıp, yazılan tüm ifadeyi $\beta > 0$ olmak üzere $\beta$ ile normalize edersek
+ifadesinin çözümü dış bükey veya türevlenebilir olmadığından problemin nümerik olarak çözülmesi hala problemlidir. Ancak basit bir akıl yürütme yapılarak <img src="assets/post_resources/math//db11334fcc1e82ed1d329e3fe6914b24.svg?invert_in_darkmode" align=middle width=77.09280479999998pt height=24.65753399999998pt/> ifadesini en küçükleyen <img src="assets/post_resources/math//c2ffb8df8b47585009c24c1e7075423c.svg?invert_in_darkmode" align=middle width=25.33485899999999pt height=22.831056599999986pt/> değerleri bulunabilir. Bunun için öncelikle matris formunda verilen ifadeyi <img src="assets/post_resources/math//4440f5b1539bfe691f5ae01007520ba5.svg?invert_in_darkmode" align=middle width=68.32370819999998pt height=24.65753399999998pt/> gibi seçilen herhangi bir piksel için yazıp, yazılan tüm ifadeyi <img src="assets/post_resources/math//99751e94989c68f9be0f6aa442bc80d5.svg?invert_in_darkmode" align=middle width=40.302373649999986pt height=22.831056599999986pt/> olmak üzere <img src="assets/post_resources/math//8217ed3c32a785f0b5aad4055f432ad8.svg?invert_in_darkmode" align=middle width=10.16555099999999pt height=22.831056599999986pt/> ile normalize edersek
 
-$$
-E_p(S^\ast,h_p,v_p) = \frac{\lambda}{\beta} C(h_p,v_p) +  \left( \lVert \nabla_x S_p - h_p \lVert^2 + \lVert \nabla_y S_p - v_p \lVert^2 \right)
-\tag{4}
-\label{hv_solution}
-$$
+<p align="center"><img src="assets/post_resources/math//2f52c9fa2a5fa5422d35ecfc2afd5a64.svg?invert_in_darkmode" align=middle width=447.35190885pt height=37.0084374pt/></p>
 
-Eşitliği elde edilir. Denklem \ref{hv_solution} te tanımlanan ifadede $C(h_p,v_p)$ fonksiyonu da parçalı fonksiyon kullanılarak aşağıdaki şekilde yazılabilir.
+Eşitliği elde edilir. Denklem \ref{hv_solution} te tanımlanan ifadede <img src="assets/post_resources/math//c11e0c6d97ee7b33a4d33e439ed28a37.svg?invert_in_darkmode" align=middle width=65.65188629999999pt height=24.65753399999998pt/> fonksiyonu da parçalı fonksiyon kullanılarak aşağıdaki şekilde yazılabilir.
 
-$$
-C(h_p,v_p) = 
-\begin{cases}
-1, & h_p \neq 0 \text{ veya } v_p  \neq 0\\
-0, & h_p = 0 \text{ ve } v_p  = 0
-\end{cases}
-$$
+<p align="center"><img src="assets/post_resources/math//cbf75c5593384618c2ee7f949669f0fa.svg?invert_in_darkmode" align=middle width=265.86742875pt height=49.315569599999996pt/></p>
 
-Denklem \ref{hv_solution} ile verilen ifade ve $C$ fonksiyonu birlikte ele alındığında $h_p=0$ ve $v_p=0$ seçilmesi durumunda $E(S^\ast, 0,0) = (\nabla_x S_p)^2 + (\nabla_y S_p)^2$ şeklinde hesaplanacaktır. $h_p,v_p$ değerlerinin sıfırdan farklı seçilmesi durumunda da en mantıklı seçim ikinci terimleri sıfır yapacak olan $h_p=\nabla_x S_p$ ve $v_p=\nabla_y S_p$ seçilmesi olacaktır. Bu drumumda ise toplam hata $E(S^\ast, \nabla_x S_p,\nabla_y S_p) = \frac{lambda}{\beta}$ şeklinde bulunacaktır.
+Denklem \ref{hv_solution} ile verilen ifade ve <img src="assets/post_resources/math//9b325b9e31e85137d1de765f43c0f8bc.svg?invert_in_darkmode" align=middle width=12.92464304999999pt height=22.465723500000017pt/> fonksiyonu birlikte ele alındığında <img src="assets/post_resources/math//9706fd776a74923b2ba58c6eb363cf8a.svg?invert_in_darkmode" align=middle width=47.20633004999999pt height=22.831056599999986pt/> ve <img src="assets/post_resources/math//9cbabe7f77259e0a8d304a3670418b37.svg?invert_in_darkmode" align=middle width=45.70328234999999pt height=21.18721440000001pt/> seçilmesi durumunda <img src="assets/post_resources/math//97189115374d21c6ec76d7f3a0f4f4af.svg?invert_in_darkmode" align=middle width=235.94067585pt height=26.76175259999998pt/> şeklinde hesaplanacaktır. <img src="assets/post_resources/math//26fc6dd0a055312a7fbf9660a1e7bfc8.svg?invert_in_darkmode" align=middle width=39.11991764999999pt height=22.831056599999986pt/> değerlerinin sıfırdan farklı seçilmesi durumunda da en mantıklı seçim ikinci terimleri sıfır yapacak olan <img src="assets/post_resources/math//5be744067058b69bc74840eca02d964f.svg?invert_in_darkmode" align=middle width=77.81846159999999pt height=22.831056599999986pt/> ve <img src="assets/post_resources/math//0676e8d7dd5dc1ab23a988b1c39d5534.svg?invert_in_darkmode" align=middle width=75.94064939999998pt height=22.465723500000017pt/> seçilmesi olacaktır. Bu drumumda ise toplam hata <img src="assets/post_resources/math//f89ee90a5667e8f30aae45220f877f7b.svg?invert_in_darkmode" align=middle width=204.65910629999996pt height=28.92634470000001pt/> şeklinde bulunacaktır.
 
-Bu durumda $(\nabla_x S_p)^2 + (\nabla_y S_p)^2$ gradyan toplamı $\frac{lambda}{\beta}$ değerinden büyük olması durumunda $h_p=\nabla_x S_p, \; v_p=\nabla_y S_p$ seçilmesi mantıklıyken, diğer durumda $h_p=0, \; v_p=0$ en iyi seçim olacaktır. Bu seçim stratejisi aşağıdaki parçalı fonskiyon ile gösterilebilir.
+Bu durumda <img src="assets/post_resources/math//b495026932e3fb86b7fd1c0e2510eb0d.svg?invert_in_darkmode" align=middle width=138.52077854999996pt height=26.76175259999998pt/> gradyan toplamı <img src="assets/post_resources/math//217d7615b03e907a2292d151b4a4176b.svg?invert_in_darkmode" align=middle width=42.77331629999999pt height=28.92634470000001pt/> değerinden büyük olması durumunda <img src="assets/post_resources/math//f7fdcc27e80e40ffd435cd559398c537.svg?invert_in_darkmode" align=middle width=166.45299pt height=22.831056599999986pt/> seçilmesi mantıklıyken, diğer durumda <img src="assets/post_resources/math//c7cd809dc35d468d3dd72ad79ac593b0.svg?invert_in_darkmode" align=middle width=104.78159339999999pt height=22.831056599999986pt/> en iyi seçim olacaktır. Bu seçim stratejisi aşağıdaki parçalı fonskiyon ile gösterilebilir.
 
-$$
-(h_p,v_p) = 
-\begin{cases}
-(0,0), &  (\nabla_x S_p)^2 + (\nabla_y S_p)^2 \leq \frac{lambda}{\beta} \\
-(\nabla_x S_p, \nabla_y S_p), & \text{ diğer}
-\end{cases}
-\tag{5}
-\label{hp_solution_partial}
-$$
+<p align="center"><img src="assets/post_resources/math//83bdac467c5ffe2ef1affc592f616035.svg?invert_in_darkmode" align=middle width=413.92076879999996pt height=49.315569599999996pt/></p>
 
 Yukarıda elde edilen iki alt problem ve çözümü birlikte ele alındığında Denklem \ref{objective_aux} ile tanımlanan problemin çözümü aşağıdaki algoritma yardımıyla hesaplanır.
 
 > - **GİRDİLER**
->   - $I$: imge
->   - $\beta, \beta_0, \beta_\text{max}$: yumuşatma parametresi
->   - $\lambda$: gradyan cezası
->   - $\kappa$: $\beta$ adım büyüklüğü 
+>   - <img src="assets/post_resources/math//21fd4e8eecd6bdf1a4d3d6bd1fb8d733.svg?invert_in_darkmode" align=middle width=8.515988249999989pt height=22.465723500000017pt/>: imge
+>   - <img src="assets/post_resources/math//435c835ec93e93c72668f72625acddac.svg?invert_in_darkmode" align=middle width=75.00581384999998pt height=22.831056599999986pt/>: yumuşatma parametresi
+>   - <img src="assets/post_resources/math//fd8be73b54f5436a5cd2e73ba9b6bfa9.svg?invert_in_darkmode" align=middle width=9.58908224999999pt height=22.831056599999986pt/>: gradyan cezası
+>   - <img src="assets/post_resources/math//5c62da39aa7289df62d937cb24a31161.svg?invert_in_darkmode" align=middle width=9.47111549999999pt height=14.15524440000002pt/>: <img src="assets/post_resources/math//8217ed3c32a785f0b5aad4055f432ad8.svg?invert_in_darkmode" align=middle width=10.16555099999999pt height=22.831056599999986pt/> adım büyüklüğü 
 > - **ÇIKTILAR**
->   - $S$: yumuşatılmış imge
+>   - <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/>: yumuşatılmış imge
 >
 > *****************************
 >
-> - $S$ = $I$
-> - $\beta = \beta_0$
-> - **while** $\beta < \beta_\text{max}$
->   - Denklem \ref{hp_solution_partial} ve $S$ yi kullanarak $h,v$ değerlerini hesapla
->   - Bulunan $h,v$ değerlerini kullanarak $B=I + \beta \left( \nabla^\intercal_x h + \nabla^\intercal_y v \right)$ matrisini hesapla
->   - $B$ ve Denklem \ref{s_solution} ü kullanarak yeni $S$ yi hesapla
->   - $\beta = \kappa \beta$ ile $\beta$ değerini artır
-> - **return** $S$
+> - <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> = <img src="assets/post_resources/math//21fd4e8eecd6bdf1a4d3d6bd1fb8d733.svg?invert_in_darkmode" align=middle width=8.515988249999989pt height=22.465723500000017pt/>
+> - <img src="assets/post_resources/math//397ac174e60de1d31eb44a39b5451b0c.svg?invert_in_darkmode" align=middle width=47.93367479999999pt height=22.831056599999986pt/>
+> - **while** <img src="assets/post_resources/math//3bfb8b334a00ec1be52e428b88330b0d.svg?invert_in_darkmode" align=middle width=65.63925389999999pt height=22.831056599999986pt/>
+>   - Denklem \ref{hp_solution_partial} ve <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> yi kullanarak <img src="assets/post_resources/math//c2ffb8df8b47585009c24c1e7075423c.svg?invert_in_darkmode" align=middle width=25.33485899999999pt height=22.831056599999986pt/> değerlerini hesapla
+>   - Bulunan <img src="assets/post_resources/math//c2ffb8df8b47585009c24c1e7075423c.svg?invert_in_darkmode" align=middle width=25.33485899999999pt height=22.831056599999986pt/> değerlerini kullanarak <img src="assets/post_resources/math//988378a8ce95aaed89cac793b8834df2.svg?invert_in_darkmode" align=middle width=173.85057195pt height=27.94539330000001pt/> matrisini hesapla
+>   - <img src="assets/post_resources/math//61e84f854bc6258d4108d08d4c4a0852.svg?invert_in_darkmode" align=middle width=13.29340979999999pt height=22.465723500000017pt/> ve Denklem \ref{s_solution} ü kullanarak yeni <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> yi hesapla
+>   - <img src="assets/post_resources/math//c4d82c3b636cf6cc654cd693ba43d800.svg?invert_in_darkmode" align=middle width=51.71982914999999pt height=22.831056599999986pt/> ile <img src="assets/post_resources/math//8217ed3c32a785f0b5aad4055f432ad8.svg?invert_in_darkmode" align=middle width=10.16555099999999pt height=22.831056599999986pt/> değerini artır
+> - **return** <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/>
 
-Verilen algoritmadan görüldüğü üzere ilk olarak girdi imgesi $S$ imgesine atanarak ilklendirme yapılmakta ve bu $S$ değeri kullanılarak $h,v$ gradyanları bulunmakta. Ardından bu değerler kullanılarak bilinenler matrisi $B$ hesaplanmaktadır. $B$ bulunduktan sonra Denklem \ref{s_solution} ile yazılan Poisson eşitliği çözülerek $S$ imgesi bulunmaktadır. Her iterasyonda bir önceki iterasyonda kullanılan $\beta$ değeri $\kappa=2.0$ gibi sabit bir sayı ile çarpılarak ertırılmakta ve $\beta$ değerinin olması gerektiği gibi çok yüksek bir sayıya ulaşması sağlanmaktadır.
+Verilen algoritmadan görüldüğü üzere ilk olarak girdi imgesi <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> imgesine atanarak ilklendirme yapılmakta ve bu <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> değeri kullanılarak <img src="assets/post_resources/math//c2ffb8df8b47585009c24c1e7075423c.svg?invert_in_darkmode" align=middle width=25.33485899999999pt height=22.831056599999986pt/> gradyanları bulunmakta. Ardından bu değerler kullanılarak bilinenler matrisi <img src="assets/post_resources/math//61e84f854bc6258d4108d08d4c4a0852.svg?invert_in_darkmode" align=middle width=13.29340979999999pt height=22.465723500000017pt/> hesaplanmaktadır. <img src="assets/post_resources/math//61e84f854bc6258d4108d08d4c4a0852.svg?invert_in_darkmode" align=middle width=13.29340979999999pt height=22.465723500000017pt/> bulunduktan sonra Denklem \ref{s_solution} ile yazılan Poisson eşitliği çözülerek <img src="assets/post_resources/math//e257acd1ccbe7fcb654708f1a866bfe9.svg?invert_in_darkmode" align=middle width=11.027402099999989pt height=22.465723500000017pt/> imgesi bulunmaktadır. Her iterasyonda bir önceki iterasyonda kullanılan <img src="assets/post_resources/math//8217ed3c32a785f0b5aad4055f432ad8.svg?invert_in_darkmode" align=middle width=10.16555099999999pt height=22.831056599999986pt/> değeri <img src="assets/post_resources/math//b2c4ff758d7d71b79021591bc21f9b6f.svg?invert_in_darkmode" align=middle width=52.39338884999999pt height=21.18721440000001pt/> gibi sabit bir sayı ile çarpılarak ertırılmakta ve <img src="assets/post_resources/math//8217ed3c32a785f0b5aad4055f432ad8.svg?invert_in_darkmode" align=middle width=10.16555099999999pt height=22.831056599999986pt/> değerinin olması gerektiği gibi çok yüksek bir sayıya ulaşması sağlanmaktadır.
 
 Yukarıda verilen algoritma IMLAB görüntü işleme kütüphanesi kullanılarak `L0Minimize(matrix_t *input, float lambda, float beta0, float betaMax, float kappa, matrix_t *output)` fonskiyonu şeklinde yazılmıştır. Yazılan fonksiyon makalede de önerilen parametreler kullanılarak aşağıdaki şekilde kullanılmıştır.
 
@@ -180,9 +110,9 @@ float betaMax = 1e5f;
 L0Minimize(img, lambda, beta0, betaMax, kappa, output);
 ```
 
-Yazılan kod parçası farklı imgeler üzerinde çalıştırılarak aşağıdaki sonuçlar elde edilmiştir. Üretilen sonuçların giriş kısmında değinilen benzer algoritmalarla karşılatırılabilmesi için Gaussian Bulanıklaştırma $(11\times 11)$, Ortanca Süzgeç $(11\times 11)$ ve Seçici Gaussian Bulanıklaştırma $(11\times 11, s=0.4)$ gibi farklı yöntemlerin çıktıları da verilmiştir.
+Yazılan kod parçası farklı imgeler üzerinde çalıştırılarak aşağıdaki sonuçlar elde edilmiştir. Üretilen sonuçların giriş kısmında değinilen benzer algoritmalarla karşılatırılabilmesi için Gaussian Bulanıklaştırma <img src="assets/post_resources/math//b363d7227e63a9f95536ac86c5ccc8b3.svg?invert_in_darkmode" align=middle width=65.75346194999999pt height=24.65753399999998pt/>, Ortanca Süzgeç <img src="assets/post_resources/math//b363d7227e63a9f95536ac86c5ccc8b3.svg?invert_in_darkmode" align=middle width=65.75346194999999pt height=24.65753399999998pt/> ve Seçici Gaussian Bulanıklaştırma <img src="assets/post_resources/math//55522e59817812a30517d6579abaf958.svg?invert_in_darkmode" align=middle width=123.68709869999999pt height=24.65753399999998pt/> gibi farklı yöntemlerin çıktıları da verilmiştir.
 
-| Kaynak İmge | Gaussian Bulanıklaştırma | Ortanca Süzgeç | Seçici Gaussian Bulanıklaştırma | L$0$ Yumuşatma
+| Kaynak İmge | Gaussian Bulanıklaştırma | Ortanca Süzgeç | Seçici Gaussian Bulanıklaştırma | L<img src="assets/post_resources/math//29632a9bf827ce0200454dd32fc3be82.svg?invert_in_darkmode" align=middle width=8.219209349999991pt height=21.18721440000001pt/> Yumuşatma
 :-------:|:----:|:----:|:---:|:---:|
 ![Image Smoothing][pattern] | ![Gaussian Bulanıklaştırma][pattern_gaussian] | ![Ortanca Süzgeç][pattern_median] | ![Seçici Gaussian Süzgeç][pattern_selective] | ![L0 Image Smoothing][pattern_result] |
 ![Image Smoothing][flower] | ![Gaussian Bulanıklaştırma][flower_gaussian] | ![Ortanca Süzgeç][flower_median] | ![Seçici Gaussian Süzgeç][flower_selective] | ![L0 Image Smoothing][flower_result] |
