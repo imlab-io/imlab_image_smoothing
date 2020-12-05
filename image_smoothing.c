@@ -4,7 +4,6 @@
 #include <math.h>
 
 #include "core.h"
-#include "core_private.h"
 #include "imcore.h"
 
 // struct to keep four neighbours of the (i,j) and itself
